@@ -1,0 +1,45 @@
+{
+  "name" : {
+    "first" : "John",
+    "last" : "Doe"
+    "nickname" : null
+  },
+  "age" : 14,
+  "addresses" : [
+    {
+      "street" : "123 Main St",
+      "city" : "Springfield",
+      "state" : "IL",
+      "zip" : "62701"
+    },
+    {
+      "street" : "456 Elm St",
+      "city" : "Springfield",
+      "state" : "IL",
+      "zip" : "62702"
+    }
+  ]
+}
+
+public class Person {
+  private Name name;
+  private int age;
+  private List<Address> addresses;
+  // getters and setters
+
+  public class Name {
+    private String first;
+    private String last;
+    private String nickname;
+    // getters and setters
+  }
+
+  public class Address {
+    private String street;
+    private String city;
+    private String state;
+    private String zip;
+    // getters and setters
+  }
+}
+

@@ -4,4 +4,4 @@ api:
     endpoints:
       users: "/users"
       posts: "/posts"
-      comments: "/comments1"
+      comments: "/comments"

@@ -14,7 +14,6 @@ public class CommentDTO {
   @Getter
   @Builder
   public static class Comment {
-    private Long id;
     private String name;
     private String email;
     private String body;

@@ -11,4 +11,8 @@ public class CalculatorResult {
   private String y;
   private String operation;
   private String result;
+
+  public CalculatorResult(CalculatorInput input, String result) {
+    this(input.getX(), input.getY(), input.getOperation().name(), result);
+  }
 }

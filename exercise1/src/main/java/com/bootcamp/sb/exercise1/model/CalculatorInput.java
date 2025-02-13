@@ -10,5 +10,5 @@ import lombok.Setter;
 public class CalculatorInput {
   private String x;
   private String y;
-  private String operation;
+  private Operation operation;
 }

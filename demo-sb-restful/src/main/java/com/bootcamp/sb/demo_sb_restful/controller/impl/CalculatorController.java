@@ -1,4 +1,4 @@
-package com.bootcamp.sb.demo_sb_restful.controller;
+package com.bootcamp.sb.demo_sb_restful.controller.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -7,23 +7,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.bootcamp.sb.exercise1.model.CalculatorInput;
 import com.bootcamp.sb.exercise1.model.CalculatorResult;
+import com.bootcamp.sb.exercise1.model.Operation;
 import com.bootcamp.sb.exercise1.service.CalculatorService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @RestController
+@RequestMapping(value = "/api/v1")
 public class CalculatorController {
   @Autowired
   CalculatorService calculatorService;
 
   @GetMapping(value = "/operation")
-  public CalculatorResult operate1(@RequestParam String x, @RequestParam String y, @RequestParam String operation) {
+  public CalculatorResult operate1(@RequestParam String x, @RequestParam String y, @RequestParam Operation operation) {
     return this.calculatorService.operate(new CalculatorInput(x, y, operation));
   };
 
   @GetMapping(value = "/operation/{x}/{y}/{operation}")
-  public CalculatorResult operate2(@PathVariable String x, @PathVariable String y, @PathVariable String operation) {
+  public CalculatorResult operate2(@PathVariable String x, @PathVariable String y, @PathVariable Operation operation) {
     return this.calculatorService.operate(new CalculatorInput(x, y, operation));
   }
 

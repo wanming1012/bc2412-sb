@@ -5,10 +5,9 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class CommentDTO {
+public class PostDTO {
   private Long id;
-  private String name;
-  private String email;
+  private String title;
   private String body;
-  private Long postId;
+  private String username;
 }

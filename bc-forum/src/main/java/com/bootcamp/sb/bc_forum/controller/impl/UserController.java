@@ -1,17 +1,14 @@
 package com.bootcamp.sb.bc_forum.controller.impl;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.bootcamp.sb.bc_forum.codewave.ApiResp;
+import com.bootcamp.sb.bc_forum.codewave.SysCode;
 import com.bootcamp.sb.bc_forum.controller.UserOperation;
 import com.bootcamp.sb.bc_forum.dto.UserDTO;
-import com.bootcamp.sb.bc_forum.model.dto.CommentDto;
-import com.bootcamp.sb.bc_forum.model.dto.PostDto;
-import com.bootcamp.sb.bc_forum.model.dto.mapper.DTOMapper;
-import com.bootcamp.sb.bc_forum.service.CommentService;
-import com.bootcamp.sb.bc_forum.service.PostService;
+import com.bootcamp.sb.bc_forum.model.dto.UserDto;
 import com.bootcamp.sb.bc_forum.service.UserService;
 
 
@@ -21,22 +18,27 @@ public class UserController implements UserOperation {
   @Autowired
   private UserService userService;
 
-  @Autowired
-  private PostService postService;
-
-  @Autowired
-  private CommentService commentService;
-
-  @Autowired
-  private DTOMapper dtoMapper;
+  @Override
+  public ApiResp<UserDTO> getUserById(Long id) {
+    return ApiResp.<UserDTO>builder()
+      .sysCode(SysCode.OK)
+      .data(this.userService.getUser(id))
+      .build();
+  }
 
   @Override
-  public List<UserDTO> getUsers() {
-    List<PostDto> posts = postService.getPosts();
-    List<CommentDto> comments = commentService.getComments();
-    return userService.getUsers().stream()
-    .map(e -> dtoMapper.mapUser(e, posts, comments))
-    .collect(Collectors.toList());
+  public ApiResp<List<UserDTO>> getAllUsers() {
+    return ApiResp.<List<UserDTO>>builder()
+      .sysCode(SysCode.OK)
+      .data(this.userService.getUsers())
+      .build();
+  }
 
+  @Override
+  public ApiResp<UserDTO> replaceUser(UserDto userDto) {
+    return ApiResp.<UserDTO>builder()
+      .sysCode(SysCode.OK)
+      .data(this.userService.replaceUser(userDto))
+      .build();
   }
 }

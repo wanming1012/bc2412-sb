@@ -1,32 +1,61 @@
 package com.bootcamp.sb.bc_forum.service.impl;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
-import com.bootcamp.sb.bc_forum.model.dto.CommentDto;
+import com.bootcamp.sb.bc_forum.codewave.BusinessException;
+import com.bootcamp.sb.bc_forum.codewave.SysCode;
+import com.bootcamp.sb.bc_forum.dto.CommentDTO;
+import com.bootcamp.sb.bc_forum.entity.CommentEntity;
+import com.bootcamp.sb.bc_forum.entity.PostEntity;
+import com.bootcamp.sb.bc_forum.entity.mapper.EntityMapper;
+import com.bootcamp.sb.bc_forum.repository.CommentRepository;
+import com.bootcamp.sb.bc_forum.repository.PostRepository;
 import com.bootcamp.sb.bc_forum.service.CommentService;
 
 @Service
 public class CommentServiceImpl implements CommentService {
   @Autowired
-  private RestTemplate restTemplate;
+  private CommentRepository commentRepository;
 
-  @Value("${api.jsonplaceholder.domain}")
-  private String domain;
+  @Autowired
+  private PostRepository postRepository;
 
-  @Value("${api.jsonplaceholder.endpoints.comments}")
-  private String userEndpoint;
+  @Autowired
+  private EntityMapper entityMapper;
 
   @Override
-  public List<CommentDto> getComments() {
-    String uri = UriComponentsBuilder.newInstance().scheme("https").host(domain)
-        .path(userEndpoint).build().toUriString();
+  public List<CommentDTO> getCommentsByPostId(Long postId) {
+    PostEntity postEntity = this.postRepository.findById(postId)
+        .orElseThrow(() -> BusinessException.of(SysCode.POST_ID_NOT_FOUND));
+    return this.commentRepository.findByPostEntity(postEntity).stream()
+        .map(e -> this.entityMapper.map(e)).collect(Collectors.toList());
+  }
 
-    return Arrays.asList(this.restTemplate.getForObject(uri, CommentDto[].class));
+  @Override
+  public List<CommentDTO> getAllComments() {
+    return this.commentRepository.findAll().stream()
+        .map(e -> this.entityMapper.map(e)).collect(Collectors.toList());
+  }
 
+  @Override
+  public CommentDTO createComment(Long postId, CommentEntity commentEntity) {
+    PostEntity postEntity = this.postRepository.findById(postId)
+        .orElseThrow(() -> BusinessException.of(SysCode.POST_ID_NOT_FOUND));
+
+    commentEntity.setPostEntity(postEntity);
+
+    return this.entityMapper.map(this.commentRepository.save(commentEntity));
+  }
+
+  @Override
+  public CommentDTO modifyBodyById(Long id, String body) {
+    CommentEntity commentEntity = this.commentRepository.findById(id)
+        .orElseThrow(() -> BusinessException.of(SysCode.COMMENT_ID_NOT_FOUND));
+
+    commentEntity.setBody(body);
+
+    return this.entityMapper.map(this.commentRepository.save(commentEntity));
   }
 }

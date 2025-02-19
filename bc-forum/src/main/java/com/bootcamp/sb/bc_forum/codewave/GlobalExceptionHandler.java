@@ -11,22 +11,21 @@ import org.springframework.web.client.HttpClientErrorException;
 public class GlobalExceptionHandler {
   @ExceptionHandler(BusinessException.class)
   @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-  public ErrorResult handleBusinessException(BusinessException e) {
-    SysCode sysCode = e.getSysCode();
-    return new ErrorResult(sysCode.getCode(), sysCode.getMessage());
+  public ApiResp<Void> handleBusinessException(BusinessException e) {
+    return ApiResp.<Void>builder()
+        .sysCode(e.getSysCode())
+        .build();
   }
 
   @ExceptionHandler({IllegalArgumentException.class, MissingServletRequestParameterException.class})
   @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-  public ErrorResult handleInvalidInput() {
-    SysCode sysCode = SysCode.INVALID_USER_ID;
-    return new ErrorResult(sysCode.getCode(), sysCode.getMessage());
+  public ApiResp<Void> handleInvalidInput() {
+    return ApiResp.<Void>builder().sysCode(SysCode.INVALID_INPUT).build();
   }
 
   @ExceptionHandler(HttpClientErrorException.class)
   @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-  public ErrorResult handleRestTemplateError() {
-    SysCode sysCode = SysCode.RESTTEMPLATE_ERROR;
-    return new ErrorResult(sysCode.getCode(), sysCode.getMessage());
+  public ApiResp<Void> handleRestTemplateError() {
+    return ApiResp.<Void>builder().sysCode(SysCode.RESTTEMPLATE_ERROR).build();
   }
 }

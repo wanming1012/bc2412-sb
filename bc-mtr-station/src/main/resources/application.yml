@@ -1,0 +1,23 @@
+api:
+  jsonplaceholder:
+    domain: "rt.data.gov.hk/v1/transport/mtr"
+    endpoints:
+      schedules: "/getSchedule.php"
+
+spring.datasource:
+  driverClassName: "org.postgresql.Driver"
+  url: "jdbc:postgresql://localhost:5432/bc2412"
+  username: "postgres"
+  password: "admin1234"
+  test:
+    url: "jdbc:h2:mem/unit_test_db"
+    driverClassName: "org.h2.Driver"
+    username: "sa"
+    password: "password"
+
+spring:
+  jpa:
+    show-sql: true  # show sql command in terminal
+    hibernate.ddl-auto: create-drop
+    test:
+      hibernate.ddl-auto: create-drop

@@ -56,6 +56,7 @@ public class CommentServiceImpl implements CommentService {
 
     commentEntity.setBody(body);
 
-    return this.entityMapper.map(this.commentRepository.save(commentEntity));
+    return this.entityMapper.map(commentEntity);
+    //return this.entityMapper.map(this.commentRepository.save(commentEntity));
   }
 }

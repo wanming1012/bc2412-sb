@@ -1,5 +1,6 @@
 package com.bootcamp.sb.demo_sb_customer.service.impl;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,9 @@ import com.bootcamp.sb.demo_sb_customer.service.AddressService;
 import com.bootcamp.sb.demo_sb_customer.service.CompanyService;
 import com.bootcamp.sb.demo_sb_customer.service.GeoService;
 import com.bootcamp.sb.demo_sb_customer.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.bootcamp.sb.demo_sb_customer.codewave.BusinessException;
+import com.bootcamp.sb.demo_sb_customer.codewave.RedisManager;
 import com.bootcamp.sb.demo_sb_customer.codewave.SysCode;
 import com.bootcamp.sb.demo_sb_customer.entity.AddressEntity;
 import com.bootcamp.sb.demo_sb_customer.entity.CompanyEntity;
@@ -47,19 +50,31 @@ public class UserServiceImpl implements UserService {
   @Value("${api.jsonplaceholder.endpoints.users}")
   private String userEndpoint;
 
+  @Autowired
+  private RedisManager redisManager;
+  // private RedisTemplate<String, String> redisTemplate;
+
   @Override
-  public List<UserDto> importUsers() {
-    String uri = UriComponentsBuilder.newInstance()
-      .scheme("https")
-      .host(domain)
-      .path(userEndpoint)
-      .build()
-      .toUriString();
+  public List<UserDto> importUsers() throws JsonProcessingException {
+    // Cache Pattern: Read Through
+    UserDto[] cachedUserDtos = redisManager.get("jph-users", UserDto[].class);
+    if (cachedUserDtos != null) {
+      return Arrays.asList(cachedUserDtos);
+    }
+    // String json = this.redisTemplate.opsForValue().get("jph-users");
+    // ObjectMapper objectMapper = new ObjectMapper();
+    // if (json != null) {
+    //   UserDto[] userDtos = objectMapper.readValue(json, UserDto[].class);
+    //   return Arrays.asList(userDtos);
+    // }
 
-    System.out.println(uri);
+    String uri = UriComponentsBuilder.newInstance().scheme("https").host(domain)
+        .path(userEndpoint).build().toUriString();
 
-    List<UserDto> userDtos = Arrays.asList(this.restTemplate.getForObject(
-        uri, UserDto[].class));
+    System.out.println("uri=" + uri);
+
+    List<UserDto> userDtos =
+        Arrays.asList(this.restTemplate.getForObject(uri, UserDto[].class));
     userDtos.forEach(e -> {
       GeoEntity geoEntity = this.entityMapper.map(e.getAddress().getGeo());
       this.geoService.createGeo(geoEntity);
@@ -74,6 +89,10 @@ public class UserServiceImpl implements UserService {
       UserEntity userEntity = this.entityMapper.map(e);
       createUser(addressEntity.getId(), companyEntity.getId(), userEntity);
     });
+
+    redisManager.set("jph-users", userDtos, Duration.ofMinutes(1));
+    // String serializedJson = objectMapper.writeValueAsString(userDtos);
+    // this.redisTemplate.opsForValue().set("jph-users", serializedJson, Duration.ofMinutes(1));
 
     return userDtos;
   }
@@ -90,7 +109,8 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserEntity createUser(Long addressId, Long companyId, UserEntity userEntity) {
+  public UserEntity createUser(Long addressId, Long companyId,
+      UserEntity userEntity) {
     AddressEntity addressEntity = addressService.getAddress(addressId);
     CompanyEntity companyEntity = companyService.getCompany(companyId);
     userEntity.setAddressEntity(addressEntity);

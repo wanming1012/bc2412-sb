@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.bootcamp.sb.demo_sb_customer.codewave.ApiResp;
 import com.bootcamp.sb.demo_sb_customer.dto.UserDTO;
 import com.bootcamp.sb.demo_sb_customer.entity.UserEntity;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 public interface UserOperation {
   @GetMapping(value = "/users/import")
-  ApiResp<List<UserDTO>> importUsers();
+  ApiResp<List<UserDTO>> importUsers() throws JsonProcessingException;
 
   @GetMapping(value = "/users")
   ApiResp<List<UserEntity>> getUsers();

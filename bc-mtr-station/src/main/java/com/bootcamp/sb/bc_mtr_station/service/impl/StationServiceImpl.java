@@ -20,6 +20,7 @@ import com.bootcamp.sb.bc_mtr_station.repository.LineStationRepository;
 import com.bootcamp.sb.bc_mtr_station.repository.StationRepository;
 import com.bootcamp.sb.bc_mtr_station.service.MTRService;
 import com.bootcamp.sb.bc_mtr_station.service.StationService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Service
 public class StationServiceImpl implements StationService {
@@ -171,7 +172,7 @@ public class StationServiceImpl implements StationService {
   }
 
   @Override
-  public EarliestTrainDTO getEarliestTrain(String stationName) {
+  public EarliestTrainDTO getEarliestTrain(String stationName) throws JsonProcessingException{
     StationEntity stationEntity =
         stationRepository.findByName(stationName).orElseThrow(
             () -> BusinessException.of(SysCode.STATION_CODE_NOT_FOUND));

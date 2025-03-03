@@ -42,7 +42,7 @@ public class PreServerStartConfig implements CommandLineRunner {
     addStations(lineEntities.get("TKL"),
         List.of("NOP", "QUB", "YAT", "TIK", "TKO", "LHP", "HAH", "POA"));
     addStations(lineEntities.get("EAL"),
-        List.of("ADM", "EXC", "HUH", "MKK", "KOT", "TQW", "SHT", "FOT", "RAC",
+        List.of("ADM", "EXC", "HUH", "MKK", "KOT", "TAW", "SHT", "FOT", "RAC",
             "UNI", "TAP", "TWO", "FAN", "SHS", "LOW", "LMC"));
     addStations(lineEntities.get("SIL"),
         List.of("ADM", "OCP", "WCH", "LET", "SOH"));

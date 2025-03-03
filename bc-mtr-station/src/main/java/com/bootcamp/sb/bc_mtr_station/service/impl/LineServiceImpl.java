@@ -16,6 +16,7 @@ import com.bootcamp.sb.bc_mtr_station.repository.LineRepository;
 import com.bootcamp.sb.bc_mtr_station.service.LineService;
 import com.bootcamp.sb.bc_mtr_station.service.MTRService;
 import com.bootcamp.sb.bc_mtr_station.service.StationService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Service
 public class LineServiceImpl implements LineService {
@@ -44,7 +45,7 @@ public class LineServiceImpl implements LineService {
   }
 
   @Override
-  public SignalDTO getLineSignal(String lineName) {
+  public SignalDTO getLineSignal(String lineName) throws JsonProcessingException{
     List<StationEntity> stations =
         this.stationService.getStationsByLine(lineName);
 
@@ -81,7 +82,7 @@ public class LineServiceImpl implements LineService {
   }
 
   @Override
-  public List<SignalDTO> getAllLineSignals() {
+  public List<SignalDTO> getAllLineSignals() throws JsonProcessingException {
     List<SignalDTO> signals = new ArrayList<>();
     List<LineEntity> lines = getAllLines();
     for (LineEntity line : lines) {

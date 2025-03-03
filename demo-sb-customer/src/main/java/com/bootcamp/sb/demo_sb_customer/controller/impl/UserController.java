@@ -12,6 +12,7 @@ import com.bootcamp.sb.demo_sb_customer.dto.UserDTO;
 import com.bootcamp.sb.demo_sb_customer.entity.UserEntity;
 import com.bootcamp.sb.demo_sb_customer.model.dto.mapper.UserDTOMapper;
 import com.bootcamp.sb.demo_sb_customer.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
 @RequestMapping(value = "/api/v1")
@@ -23,7 +24,7 @@ public class UserController implements UserOperation {
   private UserDTOMapper userDTOMapper;
   
   @Override
-  public ApiResp<List<UserDTO>> importUsers() {
+  public ApiResp<List<UserDTO>> importUsers() throws JsonProcessingException{
     List<UserDTO> userDTOs = userService.importUsers().stream()
       .map(e -> userDTOMapper.map(e))
       .collect(Collectors.toList());

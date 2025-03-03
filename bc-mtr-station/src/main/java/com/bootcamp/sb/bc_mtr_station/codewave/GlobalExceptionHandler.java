@@ -23,9 +23,9 @@ public class GlobalExceptionHandler {
     return ApiResp.<Void>builder().sysCode(SysCode.INVALID_INPUT).build();
   }
 
-  @ExceptionHandler(HttpClientErrorException.class)
-  @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-  public ApiResp<Void> handleRestTemplateError() {
-    return ApiResp.<Void>builder().sysCode(SysCode.RESTTEMPLATE_ERROR).build();
-  }
+  // @ExceptionHandler(HttpClientErrorException.class)
+  // @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+  // public ApiResp<Void> handleRestTemplateError() {
+  //   return ApiResp.<Void>builder().sysCode(SysCode.RESTTEMPLATE_ERROR).build();
+  // }
 }

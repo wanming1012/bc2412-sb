@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title id="title">Coin Data</title>
+    <!-- Bootstrap CSS for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+  </head>
+  <body>
+    <h1>Coin Data</h1>
+    <div class="form-group">
+      <label for="coinFilter">Filter by ID:</label>
+      <input type="text" class="form-control" id="coinFilter" placeholder="Enter Coin ID">
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Coin</th>
+          <th>Current Price</th>
+          <th>Price Change (24h)</th>
+          <th>Market Capitalization</th>
+        </tr>
+      </thead>
+      <tbody id="coinTableBody">
+        <tr th:each="coin : ${coinList}" class="coinRow">
+          <td>
+            <p>
+              <img th:src="${coin.image}" alt="Coin Image" height="50">
+              <span th:text="${coin.name}" class = "coinName"></span>
+              <span th:text="${coin.symbol.toUpperCase()}"></span>
+            </p>
+            <p>
+              <i th:text="${#temporals.format(coin.lastUpdated, 'yyyy-MM-dd HH:mm:ss')} + ' HKT'" height="25" style="font-size:0.9em"></i>
+            </p>
+          </td>
+          <td th:text="'$' + ${#numbers.formatDecimal(coin.currentPrice, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+          <td th:style="${coin.priceChangePercentage24h >= 0 ? 'color: green;' : 'color: red;'}">
+            <i th:class="${coin.priceChangePercentage24h >= 0 ? 'fa fa-caret-up' : 'fa fa-caret-down'}"></i>
+            <span th:text="${#numbers.formatDecimal(coin.priceChangePercentage24h, 1, 'DEFAULT', 2, 'DEFAULT')} + '%'"></span>
+          </td>
+          <td th:text="'$' + ${#numbers.formatDecimal(coin.marketCap, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- Add JavaScript for filtering -->
+    <script th:src="@{/webjars/jquery/3.6.4/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/refresh.js}"></script>
+  </body>
+</html>

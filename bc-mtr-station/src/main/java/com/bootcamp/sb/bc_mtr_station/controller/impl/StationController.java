@@ -11,6 +11,7 @@ import com.bootcamp.sb.bc_mtr_station.controller.StationOperation;
 import com.bootcamp.sb.bc_mtr_station.dto.EarliestTrainDTO;
 import com.bootcamp.sb.bc_mtr_station.entity.StationEntity;
 import com.bootcamp.sb.bc_mtr_station.service.StationService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
 @RequestMapping(value = "/api/v1")
@@ -52,7 +53,7 @@ public class StationController implements StationOperation {
   }
 
   @Override
-  public ApiResp<EarliestTrainDTO> getEarliestTrain(String station) {
+  public ApiResp<EarliestTrainDTO> getEarliestTrain(String station) throws JsonProcessingException {
     return ApiResp.<EarliestTrainDTO>builder().sysCode(SysCode.OK)
         .data(this.stationService.getEarliestTrain(station)).build();
   }

@@ -9,10 +9,17 @@ spring.datasource:
   url: "jdbc:postgresql://localhost:5432/bc2412"
   username: "postgres"
   password: "admin1234"
+  test:
+    url: "jdbc:h2:mem/unit_test_db"
+    driverClassName: "org.h2.Driver"
+    username: "sa"
+    password: "password"
 
 spring.jpa:
   show-sql: true  # show sql command in terminal
   hibernate.ddl-auto: update
+  test:
+    hibernate.ddl-auto: create-drop
 
 api:
   jsonplaceholder:

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import com.bootcamp.sb.bc_mtr_station.dto.EarliestTrainDTO;
 import com.bootcamp.sb.bc_mtr_station.entity.StationEntity;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 public interface StationService {
   List<StationEntity> getAllStations();
@@ -17,5 +18,5 @@ public interface StationService {
 
   void deleteStation(String stationName);
 
-  EarliestTrainDTO getEarliestTrain(String stationName);
+  EarliestTrainDTO getEarliestTrain(String stationName) throws JsonProcessingException;
 }

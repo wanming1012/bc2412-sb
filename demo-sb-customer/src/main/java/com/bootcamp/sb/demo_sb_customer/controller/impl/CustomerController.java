@@ -51,4 +51,12 @@ public class CustomerController implements CustomerOperation {
         .sysCode(SysCode.OK)
         .build();
   }
+
+  @Override
+  public ApiResp<CustomerEntity> getCustomer(String name) {
+    return ApiResp.<CustomerEntity>builder()
+        .sysCode(SysCode.OK)
+        .data(customerService.getCustomer(name))
+        .build();
+  }
 }

@@ -38,4 +38,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     this.customerRepository.deleteById(id);
   }
+
+  @Override
+  public CustomerEntity getCustomer(String name) {
+    return this.customerRepository.findByName(name)
+        .orElseThrow(() -> BusinessException.of(SysCode.NAME_NOT_FOUND));
+  }
 }

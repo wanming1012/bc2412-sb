@@ -1,6 +1,5 @@
 package com.bootcamp.sb.bc_forum.dto;
 
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,7 +14,6 @@ public class UserDTO {
   private String phone;
   private String website;
   private Company company;
-  // private List<Post> posts;
 
   @Getter
   @Builder
@@ -41,22 +39,4 @@ public class UserDTO {
     private String catchPhrase;
     private String bs;
   }
-
-  // @Getter
-  // @Builder
-  // public static class Post {
-  //   private Long id;
-  //   private String title;
-  //   private String body;
-  //   private List<Comment> comments;
-
-  //   @Getter
-  //   @Builder
-  //   public static class Comment {
-  //     private Long id;
-  //     private String name;
-  //     private String email;
-  //     private String body;
-  //   }
-  // }
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.bootcamp.sb.bc_mtr_station.codewave.ApiResp;
 import com.bootcamp.sb.bc_mtr_station.dto.SignalDTO;
 import com.bootcamp.sb.bc_mtr_station.entity.LineEntity;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 public interface LineOperation {
   @GetMapping(value = "/lines")
@@ -16,10 +17,10 @@ public interface LineOperation {
 
   @GetMapping(value = "/line/signal")
   @ResponseStatus(value = HttpStatus.OK)
-  ApiResp<SignalDTO> getLineSignal(@RequestParam(value = "line") String lineName);
+  ApiResp<SignalDTO> getLineSignal(@RequestParam(value = "line") String lineName) throws JsonProcessingException;
   
 
   @GetMapping(value = "/line/signals")
   @ResponseStatus(value = HttpStatus.OK)
-  ApiResp<List<SignalDTO>> getAllLineSignals();
+  ApiResp<List<SignalDTO>> getAllLineSignals() throws JsonProcessingException;
 }

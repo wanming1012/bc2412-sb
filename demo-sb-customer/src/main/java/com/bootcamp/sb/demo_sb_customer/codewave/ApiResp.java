@@ -5,6 +5,10 @@ public class ApiResp<T> {
   private String message;
   private T data;
 
+  public ApiResp() {
+
+  }
+
   public static <T> Builder<T> builder() {
     return new Builder<>();
   }
@@ -37,16 +41,6 @@ public class ApiResp<T> {
       this.message = sysCode.getMessage();
       return this;
     }
-
-    // public Builder<T> code(String code) {
-    //   this.code = code;
-    //   return this;
-    // }
-
-    // public Builder<T> message(String message) {
-    //   this.message = message;
-    //   return this;
-    // }
 
     public Builder<T> data(T data) {
       this.data = data;

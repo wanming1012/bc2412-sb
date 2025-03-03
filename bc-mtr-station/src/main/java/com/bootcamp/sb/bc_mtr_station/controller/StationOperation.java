@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.bootcamp.sb.bc_mtr_station.codewave.ApiResp;
 import com.bootcamp.sb.bc_mtr_station.dto.EarliestTrainDTO;
 import com.bootcamp.sb.bc_mtr_station.entity.StationEntity;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 public interface StationOperation {
   @GetMapping(value = "/stations")
@@ -29,7 +30,7 @@ public interface StationOperation {
   @GetMapping(value = "/station/earliest")
   @ResponseStatus(value = HttpStatus.OK)
   ApiResp<EarliestTrainDTO> getEarliestTrain(
-      @RequestParam(value = "sta") String stationName);
+      @RequestParam(value = "sta") String stationName) throws JsonProcessingException;
 
   @PostMapping(value = "/station")
   @ResponseStatus(value = HttpStatus.CREATED)

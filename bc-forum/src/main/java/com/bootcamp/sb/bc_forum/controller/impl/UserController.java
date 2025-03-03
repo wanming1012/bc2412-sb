@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bootcamp.sb.bc_forum.codewave.ApiResp;
 import com.bootcamp.sb.bc_forum.codewave.SysCode;
 import com.bootcamp.sb.bc_forum.controller.UserOperation;
+import com.bootcamp.sb.bc_forum.dto.UserCommentsDTO;
 import com.bootcamp.sb.bc_forum.dto.UserDTO;
+import com.bootcamp.sb.bc_forum.dto.UserPostsCommentsDTO;
 import com.bootcamp.sb.bc_forum.model.dto.UserDto;
 import com.bootcamp.sb.bc_forum.service.UserService;
 
@@ -39,6 +41,22 @@ public class UserController implements UserOperation {
     return ApiResp.<UserDTO>builder()
       .sysCode(SysCode.OK)
       .data(this.userService.replaceUser(userDto))
+      .build();
+  }
+
+  @Override
+  public ApiResp<List<UserPostsCommentsDTO>> getAllPostsAndComments() {
+    return ApiResp.<List<UserPostsCommentsDTO>>builder()
+      .sysCode(SysCode.OK)
+      .data(this.userService.getAllPostsAndComments())
+      .build();
+  }
+
+  @Override
+  public ApiResp<UserCommentsDTO> getAllUserComments(Long id) {
+    return ApiResp.<UserCommentsDTO>builder()
+      .sysCode(SysCode.OK)
+      .data(this.userService.getAllUserComments(id))
       .build();
   }
 }

@@ -8,4 +8,5 @@ public interface CustomerService {
   CustomerEntity getCustomer(Long id);
   List<CustomerEntity> getCustomers();
   void delete(Long id);
+  CustomerEntity getCustomer(String name);
 }

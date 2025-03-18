@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TradingView Line Chart</title>
+  <script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+
+<body>
+  <h1 th:switch="${type}">
+    <span th:case="'5M'" th:text="${symbol} + ' Stock Line Chart (1 Day)'"></span>
+    <span th:case="'D'" th:text="${symbol} + ' Stock Line Chart (1 Month)'"></span>
+    <span th:case="'W'" th:text="${symbol} + ' Stock Line Chart (1 Years)'"></span>
+    <span th:case="'M'" th:text="${symbol} + ' Stock Line Chart (5 Years)'"></span>
+  </h1>
+  <div class="container">
+    <div class="chart-wrapper">
+      <div id="chart-container"></div>
+      <div class="links-container">
+        <div class="section">
+          <h3>Settings</h3>
+          <a th:href="@{/v1/linechart(symbol=${symbol},type='5M')}" th:class="${type == '5M' ? 'active' : ''}">5 Minutes (1 Day)</a>
+          <a th:href="@{/v1/candlechart(symbol=${symbol},type='D')}" th:class="${type == 'D' ? 'active' : ''}">Daily(1 Month)</a>
+          <a th:href="@{/v1/candlechart(symbol=${symbol},type='W')}" th:class="${type == 'W' ? 'active' : ''}">Weekly(1 Year)</a>
+          <a th:href="@{/v1/candlechart(symbol=${symbol},type='M')}" th:class="${type == 'M' ? 'active' : ''}">Monthly(5 Years)</a>          
+        </div>
+      </div>
+    </div>
+  </div>
+  <input type="hidden" id="symbol" th:value="${symbol}">
+  <input type="hidden" id="type" th:value="${type}">
+  <input type="hidden" id="apiPath" th:value="${apiPath}">
+  <input type="hidden" id="smaApiPath" th:value="${smaApiPath}">
+  <script th:src="@{/js/linechart.js}"></script>
+</body>
+
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>CoinGecko OHLC Chart</title>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; }
+        #chartContainer { width: 80%; height: 400px; margin: 20px auto; }
+    </style>
+    <!-- Lightweight Charts CDN -->
+    <script src="https://unpkg.com/lightweight-charts@4.1.6/dist/lightweight-charts.standalone.production.js"></script>
+</head>
+<body>
+    <h1 th:text="${coinId} + ' OHLC Chart (Last Day)'">Coin OHLC Chart</h1>
+    <div class="mt-3">
+        <a th:href="@{/coin-data}" class="btn btn-primary">
+            Return to Coin Market
+        </a>
+    </div>
+    <div id="chartContainer"></div>
+
+    <script th:inline="javascript">
+        // Pass OHLC data from Spring Boot to JavaScript
+        const ohlcData = /*[[${ohlcData}]]*/ [];
+
+        // Convert data to Lightweight Charts candlestick format
+        const chartData = ohlcData.map(data => ({
+            time: data.timestamp / 1000, // Convert milliseconds to seconds (Unix timestamp)
+            open: data.open,
+            high: data.high,
+            low: data.low,
+            close: data.close
+        }));
+
+        // Create the chart
+        const chart = LightweightCharts.createChart(document.getElementById('chartContainer'), {
+            width: 800,
+            height: 400,
+            layout: {
+                background: { color: '#ffffff' },
+                textColor: '#333',
+            },
+            grid: {
+                vertLines: { color: '#f0f0f0' },
+                horzLines: { color: '#f0f0f0' },
+            },
+            timeScale: {
+                timeVisible: true,
+                secondsVisible: false,
+            }
+        });
+
+        // Add candlestick series
+        const candlestickSeries = chart.addCandlestickSeries({
+            upColor: '#00cc00',    // Green for upward candles
+            downColor: '#ff0000',  // Red for downward candles
+            borderVisible: false,
+            wickUpColor: '#00cc00',
+            wickDownColor: '#ff0000'
+        });
+
+        // Set the data
+        candlestickSeries.setData(chartData);
+
+        // Auto-fit the chart to the data
+        chart.timeScale().fitContent();
+    </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+services:
+  bc-coin:
+    image: bc-coin:1.0.0
+    container_name: bc-coin-container
+    build:
+      context: ./bc-coin
+      dockerfile: Dockerfile
+    networks:
+      - bootcamp_network
+    ports:
+      - "8185:8085"
+    depends_on:
+      - redis
+
+  demo-coin-web:
+    image: demo-coin-web:1.0.0
+    container_name: demo-coin-web-container
+    build:
+      context: ./demo-coin-web
+      dockerfile: Dockerfile
+    networks:
+      - bootcamp_network
+    ports:
+      - "8181:8081"
+
+  redis:
+    image: redis:latest
+    container_name: redis-container
+    ports:
+      - "6479:6379"
+    networks:
+      - bootcamp_network
+    volumes:
+      - redis-data:/data
+
+volumes:
+  redis-data:
+
+networks:
+  bootcamp_network:
+    driver: bridge

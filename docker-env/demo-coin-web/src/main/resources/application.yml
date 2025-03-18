@@ -1,0 +1,22 @@
+server:
+  port: 8081
+
+api:
+  crypto-web:
+    url:
+      base: "bc-coin-container:8085"
+      version: "crypto/api/v1"
+    coin-market:
+      endpoint: "/cache/coin/market"
+      param:
+        vsCurrency: "usd"
+        ids:
+        order: "market_cap_desc"
+        per-page: 100
+        page: 1
+        sparkline: false
+        price-change-percentage: "1h"
+      return:
+        no-of-items: 50
+    coin-ohlc:
+      endpoint: "/cache/coin/ohlc"

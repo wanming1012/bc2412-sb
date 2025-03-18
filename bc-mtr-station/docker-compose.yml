@@ -1,0 +1,45 @@
+services:
+  demo-coin-web:
+    image: bc-mtr-station:1.0.0
+    container_name: bc-mtr-station-container
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    networks:
+      - bootcamp_network
+    ports:
+      - "8281:8081"
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:latest
+    container_name: redis-container
+    ports:
+      - "6479:6379"
+    networks:
+      - bootcamp_network
+    volumes:
+      - redis-data:/data
+
+  postgres:
+    image: postgres:15 # postgres version 15
+    container_name: postgresdb
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin1234
+      POSTGRES_DB: bc2412
+      PGDATA: /var/lib/postgresql/data/pgdata15
+    networks:
+      - bootcamp_network
+    ports:
+      - "5432"
+    volumes:
+      - "./pgdata:/var/lib/postgresql/data/pgdata"
+
+volumes:
+  redis-data:
+
+networks:
+  bootcamp_network:
+    driver: bridge

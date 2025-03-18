@@ -3,11 +3,11 @@ server:
 
 api:
   crypto-web:
+    url:
+      base: "http://localhost:8085"
+      version: "crypto/api/v1"
     coin-market:
-      url:
-        base: "http://localhost:8085"
-        version: "crypto/api/v1"
-        cachedCoinsMarketsEndpoint: "/cache/coin/market"
+      endpoint: "/cache/coin/market"
       param:
         vsCurrency: "usd"
         ids:
@@ -18,3 +18,5 @@ api:
         price-change-percentage: "1h"
       return:
         no-of-items: 50
+    coin-ohlc:
+      endpoint: "/cache/coin/ohlc"

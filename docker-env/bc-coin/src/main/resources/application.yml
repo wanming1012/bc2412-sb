@@ -1,0 +1,33 @@
+server:
+  port: 8085
+
+api:
+  coingecko:
+    url:
+      base: "https://api.coingecko.com"
+      version: "api/v3"
+    param:
+      vsCurrency: "usd"
+    coin-market:
+      endpoint: "/coins/markets"
+      param:
+        ids:
+        order: "market_cap_desc"
+        per-page: 100
+        page: 1
+        sparkline: false
+        price-change-percentage: "1h"
+      return:
+        no-of-items: 50
+    coin-ohlc:
+      endpoint1: "/coins"
+      endpoint2: "/ohlc"
+      param:
+        days: 1
+        apiKey: CG-Hd4LstoApD7QqbJPRnRfp3aH
+
+spring:
+  data:
+    redis:
+      host: redis-container
+      port: 6379

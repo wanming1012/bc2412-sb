@@ -1,6 +1,7 @@
 package com.bootcamp.sb.final_project.lib;
 
 import java.time.Duration;
+import java.util.Set;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -34,6 +35,10 @@ public class RedisManager {
   }
 
   public Boolean delete(String key) {
-    return this.redisTemplate.delete(key);
+    Set<String> keys = this.redisTemplate.keys(key);
+    if (keys != null && !keys.isEmpty()) {
+      return this.redisTemplate.delete(keys) > 0;
+    }
+    return Boolean.FALSE;
   }
 }

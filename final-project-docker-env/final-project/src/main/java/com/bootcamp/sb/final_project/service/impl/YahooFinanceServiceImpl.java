@@ -58,7 +58,7 @@ public class YahooFinanceServiceImpl implements YahooFinanceService {
 
     for (String symbol : symbols) {
       LocalDate today = LocalDate.now();
-      Long startDate = today.minusYears(6).atStartOfDay()
+      Long startDate = today.minusYears(10).atStartOfDay()
           .atZone(ZoneId.of("Asia/Hong_Kong")).toEpochSecond();
       Long endDate = today.atStartOfDay().atZone(ZoneId.of("Asia/Hong_Kong"))
           .toEpochSecond();

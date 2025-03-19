@@ -20,7 +20,7 @@ public class TStockPriceOHLCController implements TStockPriceOHLCOperation {
   @Override
   public List<TStockPriceOHLCDTO> getOHLCData(String symbol,
       TStockRecordType type) throws JsonProcessingException {
-    return this.tStockPriceOHLCService.getOHLCData(symbol, type);
+    return this.tStockPriceOHLCService.getOHLCData(symbol, type, 0);
   }
 
   public List<TStockPriceDTO> getMAClosePriceData(String symbol,

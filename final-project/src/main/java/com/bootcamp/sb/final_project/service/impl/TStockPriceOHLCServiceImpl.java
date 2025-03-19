@@ -74,9 +74,10 @@ public class TStockPriceOHLCServiceImpl implements TStockPriceOHLCService {
 
   @Override
   public List<TStockPriceOHLCDTO> getOHLCData(String symbol,
-      TStockRecordType type) throws JsonProcessingException {
+      TStockRecordType type, int window) throws JsonProcessingException {
     CachedTStockPriceOHLCDTO cachedTStockPriceOHLCDTO = this.redisManager.get(
-        type.getValue() + "-OHLC-" + symbol, CachedTStockPriceOHLCDTO.class);
+        type.getValue() + "-OHLC-" + window + "-" + symbol,
+        CachedTStockPriceOHLCDTO.class);
 
     if (cachedTStockPriceOHLCDTO != null) {
       Optional<StockPriceOHLCEntity> dbMaxRegularMarketTime =
@@ -93,16 +94,32 @@ public class TStockPriceOHLCServiceImpl implements TStockPriceOHLCService {
       }
     }
 
-    Long startDate = getStartDate(type);
+    Long startDate = getStartDate(type, 0);
+    Long fetchStartDate = getStartDate(type, window * 5);
     List<StockPriceOHLCEntity> ohlcEntities = this.tStockPriceOHLCRepository
         .findAllBySymbolAndTimestampGreaterThanEqualOrderByTimestamp(symbol,
-            startDate);
+            fetchStartDate);
     List<TStockPriceOHLCDTO> ohlcDtos = switch (type) {
       case FIVE_MINUTES -> Collections.emptyList();
       case DAILY -> convertDaily(ohlcEntities);
       case WEEKLY -> convertWeekly(ohlcEntities);
       case MONTHLY -> convertMonthly(ohlcEntities);
     };
+
+    int windowData = 0;
+    int startIndex = 0;
+    for (int i = ohlcDtos.size() - 1; i >= 0; i--) {
+      if (ohlcDtos.get(i).getTimestamp() < startDate) {
+        windowData++;
+        if (windowData == window) {
+          startIndex = i;
+          break;
+        }
+      }
+    }
+    System.out.println("************** " + ohlcDtos.size() + ", " + startIndex);
+
+    ohlcDtos = ohlcDtos.subList(startIndex, ohlcDtos.size());
 
     cachedTStockPriceOHLCDTO =
         CachedTStockPriceOHLCDTO.builder()
@@ -112,7 +129,7 @@ public class TStockPriceOHLCServiceImpl implements TStockPriceOHLCService {
                     "Max regular market time cannot be found")))
             .data(ohlcDtos.toArray(TStockPriceOHLCDTO[]::new)).build();
 
-    this.redisManager.set(type.getValue() + "-OHLC-" + symbol,
+    this.redisManager.set(type.getValue() + "-OHLC-" + window + "-" + symbol,
         cachedTStockPriceOHLCDTO, Duration.ofHours(12));
 
     return ohlcDtos;
@@ -121,28 +138,36 @@ public class TStockPriceOHLCServiceImpl implements TStockPriceOHLCService {
   @Override
   public List<TStockPriceDTO> getMAClosePriceData(String symbol,
       TStockRecordType type, int window) throws JsonProcessingException {
-    List<TStockPriceOHLCDTO> ohlcs = getOHLCData(symbol, type);
+    List<TStockPriceOHLCDTO> ohlcs = getOHLCData(symbol, type, window);
     if (ohlcs.isEmpty() || window <= 0) {
       return Collections.emptyList();
     }
 
     List<TStockPriceDTO> movingAveragePrices = new ArrayList<>();
-    for (int i = 0; i < ohlcs.size(); i++) {
-      int startIndex = i - window + 1;
-      if (startIndex < 0) {
-        startIndex = 0;
-      }
-
-      int dataSize = 0;
-      BigDecimal total = BigDecimal.valueOf(0.0);
-      for (int j = startIndex; j <= i; j++) {
-        total = total.add(BigDecimal.valueOf(ohlcs.get(j).getClose()));
-        dataSize++;
-      }
-
-      Double avgPrice = total.divide(BigDecimal.valueOf(dataSize), 6, RoundingMode.HALF_UP).doubleValue();
-      movingAveragePrices.add(new TStockPriceDTO(ohlcs.get(i).getTimestamp(), avgPrice));
+    BigDecimal total = BigDecimal.valueOf(0.0);
+    for (int i = 0; i < window; i++) {
+      total = total.add(BigDecimal.valueOf(ohlcs.get(i).getClose()));
     }
+
+    Double avgPrice =
+        total.divide(BigDecimal.valueOf(window), 6, RoundingMode.HALF_UP)
+            .doubleValue();
+    movingAveragePrices.add(
+        new TStockPriceDTO(ohlcs.get(window - 1).getTimestamp(), avgPrice));
+
+    for (int i = 1; i < ohlcs.size() - window + 1; i++) {
+      total = total.subtract(BigDecimal.valueOf(ohlcs.get(i - 1).getClose()))
+          .add(BigDecimal.valueOf(ohlcs.get(i + window - 1).getClose()));
+
+      avgPrice =
+          total.divide(BigDecimal.valueOf(window), 6, RoundingMode.HALF_UP)
+              .doubleValue();
+
+      movingAveragePrices.add(new TStockPriceDTO(
+          ohlcs.get(i + window - 1).getTimestamp(), avgPrice));
+    }
+    System.out.println("**************** " + window + ", " + ohlcs.size() + ", "
+        + movingAveragePrices.size());
 
     return movingAveragePrices;
   }
@@ -153,14 +178,15 @@ public class TStockPriceOHLCServiceImpl implements TStockPriceOHLCService {
         .toLocalDate();
   }
 
-  private Long getStartDate(TStockRecordType type) {
+  private Long getStartDate(TStockRecordType type, int window) {
     LocalDate today = LocalDate.now();
     LocalDate startDate = switch (type) {
       case FIVE_MINUTES -> today;
-      case DAILY -> today.minusMonths(1);
-      case WEEKLY -> today.minusYears(1);
-      case MONTHLY -> today.minusYears(5);
+      case DAILY -> today.minusMonths(1).minusDays(window);
+      case WEEKLY -> today.minusYears(1).minusDays(7 * window);
+      case MONTHLY -> today.minusYears(5).minusMonths(window);
     };
+    System.out.println("*************" + startDate + ", " + window);
     return startDate.atStartOfDay().atZone(ZoneId.of("Asia/Hong_Kong"))
         .toEpochSecond();
   }

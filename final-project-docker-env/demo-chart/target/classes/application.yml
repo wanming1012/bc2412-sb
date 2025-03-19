@@ -1,0 +1,30 @@
+server:
+  port: 8100
+
+spring:
+  profiles:
+    active: local
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  
+  api:
+    line: "http://localhost:8080/v1/prices"
+    candle: "http://localhost:8080/v1/ohlc"
+    line-sma: "http://localhost:8080/v1/maprices"
+    candle-sma: "http://localhost:8080/v1/maohlc"
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+  
+  api:
+    line: "http://44.217.207.109:8080/v1/prices"
+    candle: "http://44.217.207.109:8080/v1/ohlc"
+    line-sma: "http://44.217.207.109:8080/v1/maprices"
+    candle-sma: "http://44.217.207.109:8080/v1/maohlc"

@@ -22,9 +22,16 @@
         <div class="section">
           <h3>Settings</h3>
           <a th:href="@{/v1/linechart(symbol=${symbol},type='5M')}" th:class="${type == '5M' ? 'active' : ''}">5 Minutes (1 Day)</a>
-          <a th:href="@{/v1/candlechart(symbol=${symbol},type='D')}" th:class="${type == 'D' ? 'active' : ''}">Daily(1 Month)</a>
-          <a th:href="@{/v1/candlechart(symbol=${symbol},type='W')}" th:class="${type == 'W' ? 'active' : ''}">Weekly(1 Year)</a>
-          <a th:href="@{/v1/candlechart(symbol=${symbol},type='M')}" th:class="${type == 'M' ? 'active' : ''}">Monthly(5 Years)</a>          
+          <a th:href="@{/v1/candlechart(symbol=${symbol},type='D')}" th:class="${type == 'D' ? 'active' : ''}">Daily (1 Month)</a>
+          <a th:href="@{/v1/candlechart(symbol=${symbol},type='W')}" th:class="${type == 'W' ? 'active' : ''}">Weekly (1 Year)</a>
+          <a th:href="@{/v1/candlechart(symbol=${symbol},type='M')}" th:class="${type == 'M' ? 'active' : ''}">Monthly (5 Years)</a>          
+          <h3>Stock</h3>
+          <a th:if="${type == '5M'}" th:href="@{/v1/linechart(symbol='0005.HK',type=${type})}" th:class="${symbol == '0005.HK' ? 'active' : ''}">HSBC</a>
+          <a th:if="${type == '5M'}" th:href="@{/v1/linechart(symbol='0388.HK',type=${type})}" th:class="${symbol == '0388.HK' ? 'active' : ''}">HKEX</a>
+          <a th:if="${type == '5M'}" th:href="@{/v1/linechart(symbol='0522.HK',type=${type})}" th:class="${symbol == '0522.HK' ? 'active' : ''}">ASMPT</a>
+          <a th:unless="${type == '5M'}" th:href="@{/v1/candlechart(symbol='0005.HK',type=${type})}" th:class="${symbol == '0005.HK' ? 'active' : ''}">HSBC</a>
+          <a th:unless="${type == '5M'}" th:href="@{/v1/candlechart(symbol='0388.HK',type=${type})}" th:class="${symbol == '0388.HK' ? 'active' : ''}">HKEX</a>
+          <a th:unless="${type == '5M'}" th:href="@{/v1/candlechart(symbol='0522.HK',type=${type})}" th:class="${symbol == '0522.HK' ? 'active' : ''}">ASMPT</a>
         </div>
       </div>
     </div>

@@ -44,13 +44,26 @@ public class PreServerStartConfig implements CommandLineRunner {
 
   private void deleteRedisRecords(List<String> symbols) {
     this.redisManager.delete("STOCK-LIST");
+    this.redisManager.delete("SYSDATE-*");
+    this.redisManager.delete("5M-*");
+    this.redisManager.delete("D-*");
+    this.redisManager.delete("W-*");
+    this.redisManager.delete("M-*");
+
     for (String symbol : symbols) {
-      this.redisManager.delete("SYSDATE-" + symbol);
-      this.redisManager.delete("5M-" + symbol);
+      this.redisManager.delete("*" + symbol);
+      // this.redisManager.delete("SYSDATE-" + symbol);
+      // this.redisManager.delete("5M-" + symbol);
+      // this.redisManager.delete("D-" + symbol);
+      // this.redisManager.delete("W-" + symbol);
+      // this.redisManager.delete("M-" + symbol);
+      // this.redisManager.delete("D-OHLC-" + symbol);
+      // this.redisManager.delete("W-OHLC-" + symbol);
+      // this.redisManager.delete("M-OHLC-" + symbol);
     }
   }
 
-  private void loadOHLCData() throws JsonProcessingException{
+  private void loadOHLCData() throws JsonProcessingException {
     this.yahooFinanceService.fetchStockPriceHistory();
   }
 }

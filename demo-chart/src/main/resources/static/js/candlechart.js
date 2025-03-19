@@ -128,7 +128,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }))
         .sort((a, b) => a.time - b.time);
       // Set the data for the line series
-      console.log(stockData);
       sma10Series.setData(stockData);
     })
     .catch((error) => {
@@ -150,7 +149,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }))
         .sort((a, b) => a.time - b.time);
       // Set the data for the line series
-      console.log(stockData);
       sma20Series.setData(stockData);
     })
     .catch((error) => {
@@ -172,7 +170,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }))
         .sort((a, b) => a.time - b.time);
       // Set the data for the line series
-      //console.log(stockData);
       sma5Series.setData(stockData);
     })
     .catch((error) => {

@@ -13,7 +13,7 @@ public interface TStockPriceOHLCService {
   StockPriceOHLCEntity create(StockPriceOHLCEntity stockPriceOHLCEntity);
   Optional<Long> getStartDate(String symbol);
   Optional<Long> getEndDate(String symbol);
-  List<TStockPriceOHLCDTO> getOHLCData(String symbol, TStockRecordType type) throws JsonProcessingException;
+  List<TStockPriceOHLCDTO> getOHLCData(String symbol, TStockRecordType type, int window) throws JsonProcessingException;
   List<TStockPriceDTO> getMAClosePriceData(String symbol, TStockRecordType type, int window) throws JsonProcessingException;
 
   LocalDate convert(Long timestamp);

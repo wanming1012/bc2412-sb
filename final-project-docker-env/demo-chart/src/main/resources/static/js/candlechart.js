@@ -80,7 +80,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const apiPath = document.getElementById('apiPath').value;
   const smaApiPath = document.getElementById('smaApiPath').value;
 
-  console.log(`${apiPath}?symbol=${symbol}&type=${type}`);
   fetch(`${apiPath}?symbol=${symbol}&type=${type}`)
     .then((response) => response.json())
     .then((data) => {
@@ -129,7 +128,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }))
         .sort((a, b) => a.time - b.time);
       // Set the data for the line series
-      console.log(stockData);
       sma10Series.setData(stockData);
     })
     .catch((error) => {
@@ -151,7 +149,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }))
         .sort((a, b) => a.time - b.time);
       // Set the data for the line series
-      console.log(stockData);
       sma20Series.setData(stockData);
     })
     .catch((error) => {
@@ -173,7 +170,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }))
         .sort((a, b) => a.time - b.time);
       // Set the data for the line series
-      //console.log(stockData);
       sma5Series.setData(stockData);
     })
     .catch((error) => {
